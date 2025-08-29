@@ -28,112 +28,33 @@ input [3:0] sec_chuc, sec_dv, min_chuc, min_dv, hour_chuc, hour_dv;
 wire [7:0] sseg1, sseg2, sseg3, sseg4, sseg5, sseg6;
 
 
-//decode tens to sseg1
-function [7:0] decode_sseg1;
-	input [3:0] sec_chuc;
-		case(sec_chuc)
-			4'd0: decode_sseg1 = 8'h3f;
-			4'd1: decode_sseg1 = 8'h06;
-			4'd2: decode_sseg1 = 8'h5b;
-			4'd3: decode_sseg1 = 8'h4f;
-			4'd4: decode_sseg1 = 8'h66;
-			4'd5: decode_sseg1 = 8'h6d;
-			4'd6: decode_sseg1 = 8'h7d;
-			4'd7: decode_sseg1 = 8'h07;
-			4'd8: decode_sseg1 = 8'h7f;
-			4'd9: decode_sseg1 = 8'h6f;
+// decode BCD -> 7 seggs
+function [7:0] decode_sseg;
+    input [3:0] bcd;
+    begin
+        case(bcd)
+            4'd0: decode_sseg = 8'h3f;
+            4'd1: decode_sseg = 8'h06;
+            4'd2: decode_sseg = 8'h5b;
+            4'd3: decode_sseg = 8'h4f;
+            4'd4: decode_sseg = 8'h66;
+            4'd5: decode_sseg = 8'h6d;
+            4'd6: decode_sseg = 8'h7d;
+            4'd7: decode_sseg = 8'h07;
+            4'd8: decode_sseg = 8'h7f;
+            4'd9: decode_sseg = 8'h6f;
+            default: decode_sseg = 8'h00; // tắt hết nếu không hợp lệ
         endcase
+    end
 endfunction
 
-//decode units to sseg2
-function [7:0] decode_sseg2;
-	input [3:0] sec_dv;
-		case(sec_dv)
-			4'd0: decode_sseg2 = 8'h3f;
-			4'd1: decode_sseg2 = 8'h06;
-			4'd2: decode_sseg2 = 8'h5b;
-			4'd3: decode_sseg2 = 8'h4f;
-			4'd4: decode_sseg2 = 8'h66;
-			4'd5: decode_sseg2 = 8'h6d;
-			4'd6: decode_sseg2 = 8'h7d;
-			4'd7: decode_sseg2 = 8'h07;
-			4'd8: decode_sseg2 = 8'h7f;
-			4'd9: decode_sseg2 = 8'h6f;
-        endcase
-endfunction
+assign sseg1 = decode_sseg(sec_chuc);
+assign sseg2 = decode_sseg(sec_dv);
+assign sseg3 = decode_sseg(min_chuc);
+assign sseg4 = decode_sseg(min_dv);
+assign sseg5 = decode_sseg(hour_chuc);
+assign sseg6 = decode_sseg(hour_dv);
 
-//decode units to sseg3
-function [7:0] decode_sseg3;
-	input [3:0] min_chuc;
-		case(min_chuc)
-			4'd0: decode_sseg3 = 8'h3f;
-			4'd1: decode_sseg3 = 8'h06;
-			4'd2: decode_sseg3 = 8'h5b;
-			4'd3: decode_sseg3 = 8'h4f;
-			4'd4: decode_sseg3 = 8'h66;
-			4'd5: decode_sseg3 = 8'h6d;
-			4'd6: decode_sseg3 = 8'h7d;
-			4'd7: decode_sseg3 = 8'h07;
-			4'd8: decode_sseg3 = 8'h7f;
-			4'd9: decode_sseg3 = 8'h6f;
-        endcase
-endfunction
-
-//decode units to sseg4
-function [7:0] decode_sseg4;
-	input [3:0] min_dv;
-		case(min_dv)
-			4'd0: decode_sseg4 = 8'h3f;
-			4'd1: decode_sseg4 = 8'h06;
-			4'd2: decode_sseg4 = 8'h5b;
-			4'd3: decode_sseg4 = 8'h4f;
-			4'd4: decode_sseg4 = 8'h66;
-			4'd5: decode_sseg4 = 8'h6d;
-			4'd6: decode_sseg4 = 8'h7d;
-			4'd7: decode_sseg4 = 8'h07;
-			4'd8: decode_sseg4 = 8'h7f;
-			4'd9: decode_sseg4 = 8'h6f;
-        endcase
-endfunction
-
-function [7:0] decode_sseg5;
-input [3:0] hour_chuc;
- case (hour_chuc)
-		4'd0: decode_sseg5 = 8'h3f;
-		4'd1: decode_sseg5 = 8'h06;
-		4'd2: decode_sseg5 = 8'h5b;
-		4'd3: decode_sseg5 = 8'h4f;
-		4'd4: decode_sseg5 = 8'h66;
-		4'd5: decode_sseg5 = 8'h6d;
-		4'd6: decode_sseg5 = 8'h7d;
-		4'd7: decode_sseg5 = 8'h07;
-		4'd8: decode_sseg5 = 8'h7f;
-		4'd9: decode_sseg5 = 8'h6f;
-	endcase
-endfunction
-//decode units to sseg6
-function [7:0] decode_sseg6;
-	input [3:0] hour_dv;
-		case(hour_dv)
-			4'd0: decode_sseg6 = 8'h3f;
-			4'd1: decode_sseg6 = 8'h06;
-			4'd2: decode_sseg6 = 8'h5b;
-			4'd3: decode_sseg6 = 8'h4f;
-			4'd4: decode_sseg6 = 8'h66;
-			4'd5: decode_sseg6 = 8'h6d;
-			4'd6: decode_sseg6 = 8'h7d;
-			4'd7: decode_sseg6 = 8'h07;
-			4'd8: decode_sseg6 = 8'h7f;
-			4'd9: decode_sseg6 = 8'h6f;
-        endcase
-endfunction
-
-assign sseg1 = decode_sseg1(sec_chuc);
-assign sseg2 = decode_sseg2(sec_dv);
-assign sseg3 = decode_sseg3(min_chuc);
-assign sseg4 = decode_sseg4(min_dv);
-assign sseg5 = decode_sseg5(hour_chuc);
-assign sseg6 = decode_sseg6(hour_dv);
 
 //Data
 wire [47:0]data;
